@@ -4,41 +4,44 @@
 #include <SDL_image.h>
 #include "loadImage.h"
 #include "objects.h"
+#include "ball.h"
 
-class walls : public objects
+class Walls : public Objects
 {
 protected:
-	loadImage image;
+	Image_texture image;
 public:
-	walls() {}
-	walls(int x, int y, int width, int height);
-	~walls() {}
-
+	Walls() {}
+	Walls(int x, int y, int width, int height);
+	virtual ~Walls() {}
 	void load_image(const char* photoName, SDL_Renderer* ren);
 	//void load_image(loadImage &picture);
 	void render(SDL_Renderer* ren, SDL_Rect wall);
 	void events() {}
+
+	//const values
+	const int BLOCK_W = 90;
+	const int BLOCK_H = 30;
+	const int REN_Y = 100;
+	const int REN_W = 640;
+	const int REN_H = 400;
+
 };
 
-class wall_1 : public walls {
+class Wall_1 : public Walls {
 public:
-	wall_1() {}
-	wall_1 (int x, int y, int width, int height) {
-		walls::walls(x, y, width, height);
-	}
-	~wall_1 () {}
+	Wall_1() {}
+	Wall_1 (int x, int y, int width, int height):Walls(x, y, width, height) {} 
+	~Wall_1 () {}
 	void events();
 };
 
-class wall_2 : public walls {
+class Wall_2 : public Walls {
 public:
-	wall_2() {}
-	wall_2(int x, int y, int width, int height) {
-		std::cout << "Wall_2 konstruktoius" << std::endl;
-		walls::walls(x, y, width, height);
-	}
-
-	~wall_2() {}
+	Wall_2() {}
+	Wall_2(int x, int y, int width, int height):Walls(x, y, width, height) {}
+	
+	~Wall_2() {}
 	void events();
 };
 

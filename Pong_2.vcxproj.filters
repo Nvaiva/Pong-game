@@ -44,9 +44,6 @@
     <ClInclude Include="game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="figure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="objects.h">
       <Filter>Header Files</Filter>
     </ClInclude>

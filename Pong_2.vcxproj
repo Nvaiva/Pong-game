@@ -151,7 +151,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h" />
-    <ClInclude Include="figure.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="loadImage.h" />
     <ClInclude Include="objects.h" />

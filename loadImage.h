@@ -2,11 +2,12 @@
 #include "SDL.h"
 #include "SDL_image.h"
 
-class loadImage 
+class Image_texture
 {
 public:
-	loadImage () {}
+	Image_texture () {}
 	void load(const char* photoName, SDL_Renderer* ren);
+	static SDL_Texture* load_texture(const char* photoName, SDL_Renderer* ren);
 	SDL_Texture *texture;
 };
 

@@ -2,11 +2,11 @@
 
 
 
-objects::objects()
+Objects::Objects()
 {
 }
 
 
-objects::~objects()
+Objects::~Objects()
 {
 }
