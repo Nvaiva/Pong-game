@@ -24,7 +24,6 @@ void Ball::render(SDL_Renderer* ren, SDL_Rect ball){
 }
 
 void Ball::events() {
-
 	if (object_pos.x <= 0)
 		vell_x = -vell_x;
 
@@ -67,7 +66,7 @@ void Additional_ball::events() {
 	}
 	else {
 		object_pos.x += vell_x;
-		object_pos.y += vell_y;
+		object_pos.y -= vell_y;
 	}
 
 	

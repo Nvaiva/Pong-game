@@ -1,11 +1,10 @@
 #pragma once
-#include "figure.h"
 #include "objects.h"
-class Ball : public Objects
+class Ball : public Object
 {
 protected:
 	Image_texture image;
-	int vell_x = 5, vell_y = 5; //vellocity of the ball
+	int vell_x  = 5, vell_y = 5; //vellocity of the ball
 public:
 	Ball() {}
 	Ball(int x, int y, int height, int width);
@@ -38,6 +37,7 @@ public:
 	Additional_ball(const Additional_ball &ad_ball) :Ball(ad_ball) { count_balls += 1; }
 	~Additional_ball() {}
 	static int get_count () { return count_balls; }
+	static void set_count(int a) { count_balls = a; }
 	void events();
 };
 

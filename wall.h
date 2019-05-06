@@ -6,7 +6,7 @@
 #include "objects.h"
 #include "ball.h"
 
-class Walls : public Objects
+class Walls : public Object
 {
 protected:
 	Image_texture image;
@@ -15,7 +15,6 @@ public:
 	Walls(int x, int y, int width, int height);
 	virtual ~Walls() {}
 	void load_image(const char* photoName, SDL_Renderer* ren);
-	//void load_image(loadImage &picture);
 	void render(SDL_Renderer* ren, SDL_Rect wall);
 	void events() {}
 

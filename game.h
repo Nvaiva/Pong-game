@@ -9,6 +9,7 @@
 #include "ball.h"
 #include "wall.h"
 #include "objects.h"
+#include "memory.h"
 class Game
 {
 public:
@@ -25,10 +26,9 @@ public:
 	~Game();
 
 private:
-
-	std::vector <Objects*> object;
+	std::vector <Object*> object;
 	std::vector <Ball*> balls;
-	SDL_Rect line = { 100,100, 1, 1 };
+	bool t = true;
 	bool isRunning;
 	bool startAgain;
 	SDL_Window* win;
@@ -41,7 +41,7 @@ private:
 	Wall_2 *block2;
 	Ball *square;
 	Additional_ball *additional;
-
+	std::vector <Additional_ball*> additionals;
 	//const values
 	const int BLOCKS = 2;
 	const int BLOCK_W = 90;

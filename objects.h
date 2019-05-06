@@ -2,7 +2,7 @@
 #include <vector>
 #include "loadImage.h"
 
-class Objects
+class Object
 {
 public:
 	bool isRunning = true;
@@ -16,12 +16,12 @@ public:
 
 public:
 
-	Objects();
-	virtual ~Objects();
+	Object() = default;
+	virtual ~Object() = default;
 	virtual void load_image(const char* photoName, SDL_Renderer* ren) = 0;
-	//virtual void load_image(loadImage &picture);
 	virtual void render(SDL_Renderer* ren, SDL_Rect wall) = 0;
 	virtual void events() = 0;
+
 	//const values
 	const int BLOCK_W = 90;
 	const int BLOCK_H = 30;

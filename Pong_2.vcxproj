@@ -145,7 +145,6 @@
     <ClCompile Include="ball.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="loadImage.cpp" />
-    <ClCompile Include="objects.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="wall.cpp" />
   </ItemGroup>

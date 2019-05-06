@@ -27,9 +27,6 @@
     <ClCompile Include="ball.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objects.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="wall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

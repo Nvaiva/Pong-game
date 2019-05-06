@@ -2,7 +2,6 @@
 #include <vector>
 #include <iostream>
 
-
 Game::Game()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
@@ -38,8 +37,8 @@ Game::Game()
 	game_over = Image_texture::load_texture("gameOver.png", renderer);
 
 	//if load game was pressed
-	bool t;
-	if (!(t = start()))
+	bool a;
+	if (!(a = start()))
 		load();
 	
 	
@@ -84,19 +83,20 @@ void Game::events()
 			switch (event.key.keysym.sym)
 			{
 			case SDLK_KP_PLUS:
+				int num = additionals.size();
 				size_t nr = object.size();
-				if (balls.size() > 2) {
-					additional = new Additional_ball(*additional);
-					std::cout << additional->get_count() << std::endl;
+				if (balls.size() > 1) {
+					additionals.push_back(new Additional_ball(*additionals[num-1]));
+					std::cout << additionals[num]->get_count() << std::endl;
 				}
 				else {
-					additional = new Additional_ball(100, 100, SQUARE_H_W, SQUARE_H_W);
-					std::cout << additional->get_count() << std::endl;
+					additionals.push_back(new Additional_ball(100, 100, SQUARE_H_W, SQUARE_H_W));
+					std::cout << additionals[num]->get_count() << std::endl;
 				}
-				object.push_back(additional);
+				object.push_back(additionals[num]);
 				object[nr]->load_image("ball.png", renderer);
 				object[nr] = dynamic_cast<Ball*>(object[nr]);
-				balls.push_back(additional);
+				balls.push_back(additionals[num]);
 			}
 		}
 	}
@@ -173,12 +173,11 @@ void Game::update()
 
 	for (size_t i = 0; i < object.size(); i++) {
 	if (object[i]->isRunning == false) {
-		std::cout << "Was saved" << std::endl;
 		save();
 		isRunning = false;
 	}
 	}
-	if (!isRunning)
+	if (!isRunning && t== true)
 		save();
 	
 		
@@ -216,6 +215,8 @@ void Game::save()
 		ofile.write((char*)&x, sizeof(int));
 		ofile.write((char*)&y, sizeof(int));
 	}
+	additional->set_count(0);
+
 	ofile.close();
 }
 void Game::load() 
@@ -226,13 +227,13 @@ void Game::load()
 	int count_objects = 0;
 	ofile.read((char*)&count_objects, sizeof(int));
 
-	for (size_t i = 0; i < BLOCKS; i++) {
+	for (int i = 0; i < BLOCKS; i++) {
 		ofile.read((char*)&object[i]->object_pos.x, sizeof(int));
 		ofile.read((char*)&object[i]->object_pos.y, sizeof(int));
 	}
 
 	if (count_objects > (BLOCKS+1)) {
-		for (size_t i = (BLOCKS+1); i < (count_objects); i++) {
+		for (int i = (BLOCKS+1); i < (count_objects); i++) {
 
 			additional = new Additional_ball(100, 100, SQUARE_H_W, SQUARE_H_W);
 			object.push_back(additional);
