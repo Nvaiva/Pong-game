@@ -1,5 +1,5 @@
 #include "ball.h"
-
+//
 int Additional_ball::count_balls = 0;
 
 Ball::Ball(int x, int y, int height, int width) {

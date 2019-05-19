@@ -19,7 +19,6 @@ public:
 	void set_x(int x) { vell_x = x; }
 	void set_y(int y) { vell_y = y; }
 
-	//const values
 	const int SQUARE_H_W = 25;
 	const int REN_X = 100;
 	const int REN_Y = 100;

@@ -7,7 +7,6 @@ class Object
 public:
 	bool isRunning = true;
 	bool startAgain = true;
-	//loadImage texture;
 	SDL_Rect object_pos;
 	SDL_Texture* tex;
 	const Uint8 *keyState;

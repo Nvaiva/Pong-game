@@ -12,10 +12,6 @@ void Walls::load_image(const char* photoName, SDL_Renderer* ren) {
 	tex = image.texture;
 }
 
-/*void walls::load_image(loadImage &picture) {
-	tex = image.texture;
-}*/
-
 void Walls::render(SDL_Renderer* ren, SDL_Rect wall) {
 	SDL_RenderCopy(ren, tex, NULL, &wall);
 }

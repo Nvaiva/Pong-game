@@ -18,7 +18,6 @@ public:
 	void render(SDL_Renderer* ren, SDL_Rect wall);
 	void events() {}
 
-	//const values
 	const int BLOCK_W = 90;
 	const int BLOCK_H = 30;
 	const int REN_Y = 100;

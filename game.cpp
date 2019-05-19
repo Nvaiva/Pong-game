@@ -74,6 +74,7 @@ bool Game::start()
 void Game::events()
 {
 	//creating additional ball
+	//
 	while (SDL_PollEvent(&event) != 0) {
 		if (event.type == SDL_QUIT) {
 			isRunning = false;
