@@ -10,28 +10,37 @@
 #include "wall.h"
 #include "objects.h"
 #include "memory.h"
-//
+#include <map>
+#include <iterator>
+#include <utility>
+#include "renderer_error.h"
+#include <time.h>
+#include <algorithm>
+
 class Game
 {
 public:
 	void events();
 	void update();
-	bool start();
+	bool start(bool* player_2);
 	void save();
 	void load();
-	bool running() const { return isRunning; }
-	bool again() const { return startAgain;  }
+	bool running() const { return is_running; }
+	bool again() const { return start_again;  }
 	bool collision1(Ball *square) const;
-	bool collision2(Ball *square) const;
 	Game();
 	~Game();
 
 private:
+	//Object_pos<int> object_pos;
 	std::vector <Object*> object;
-	std::vector <Ball*> balls;
+	std::vector<Object*>::iterator it;
+	const Uint8 *keyState;
+	SDL_Rect pos;
 	bool t = true;
-	bool isRunning;
-	bool startAgain;
+	bool is_running;
+	bool start_again;
+	bool player_2 = false;
 	SDL_Window* win;
 	SDL_Event event;
 	SDL_Renderer* renderer;
@@ -41,20 +50,8 @@ private:
 	Wall_1 *block1;
 	Wall_2 *block2;
 	Ball *square;
-	Additional_ball *additional;
-	std::vector <Additional_ball*> additionals;
-	//const values
-	const int BLOCKS = 2;
-	const int BLOCK_W = 90;
-	const int BLOCK_H = 30;
-	const int SQUARE_H_W = 25;
-	const int BLOCK_QUANTITY = 2;
 
-	//renderer size
-	const int REN_X = 100;
-	const int REN_Y = 100;
-	const int REN_W = 640;
-	const int REN_H = 400;
-
+	static clock_t time;
+	int nr_time;
 };
 

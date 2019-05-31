@@ -10,20 +10,15 @@ class Walls : public Object
 {
 protected:
 	Image_texture image;
+	
 public:
+	//Object_pos<int> object_pos;
 	Walls() {}
 	Walls(int x, int y, int width, int height);
 	virtual ~Walls() {}
 	void load_image(const char* photoName, SDL_Renderer* ren);
 	void render(SDL_Renderer* ren, SDL_Rect wall);
 	void events() {}
-
-	const int BLOCK_W = 90;
-	const int BLOCK_H = 30;
-	const int REN_Y = 100;
-	const int REN_W = 640;
-	const int REN_H = 400;
-
 };
 
 class Wall_1 : public Walls {
@@ -41,6 +36,13 @@ public:
 	
 	~Wall_2() {}
 	void events();
+	void AI_wall(int y);
 };
-
+class AI_wall : public Walls {
+public:
+	AI_wall(){}
+	AI_wall(int x, int y, int width, int height) :Walls(x, y, width, height) {}
+	~AI_wall() {}
+	void set_x(int x) { object_pos.x = x; }
+};
 

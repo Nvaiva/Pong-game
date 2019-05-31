@@ -1,5 +1,5 @@
 #include "ball.h"
-//
+
 int Additional_ball::count_balls = 0;
 
 Ball::Ball(int x, int y, int height, int width) {
@@ -7,6 +7,14 @@ Ball::Ball(int x, int y, int height, int width) {
 	object_pos.y = y;
 	object_pos.h= height;
 	object_pos.w = width;
+}
+Ball::Ball(int x, int y, int height, int width, int vell_x, int vell_y) {
+	object_pos.x = x;
+	object_pos.y = y;
+	object_pos.h = height;
+	object_pos.w = width;
+	vell_x = vell_x;
+	vell_y = vell_y;
 }
 Ball::Ball(const Ball &ball) {
 	object_pos.x = ball.object_pos.x;
@@ -39,14 +47,6 @@ void Ball::events() {
 	object_pos.x += vell_x;
 	object_pos.y += vell_y;
 }
-
-/*Additional_ball::Additional_ball(const Additional_ball &ad_ball) {
-	object_pos.x = ad_ball.object_pos.x;
-	object_pos.y = ad_ball.object_pos.y;
-	object_pos.h = ad_ball.object_pos.h;
-	object_pos.w = ad_ball.object_pos.w;
-}*/
-
 void Additional_ball::events() {
 	if (object_pos.x <= 0)
 		vell_x = -vell_x;

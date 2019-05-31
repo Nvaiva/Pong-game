@@ -1,13 +1,19 @@
 #pragma once
 #include "objects.h"
+#include "object_pos.h"
+#include <iostream>
+
 class Ball : public Object
 {
 protected:
 	Image_texture image;
+	
 	int vell_x  = 5, vell_y = 5; //vellocity of the ball
 public:
+
 	Ball() {}
 	Ball(int x, int y, int height, int width);
+	Ball(int x, int y, int height, int width, int vell_x, int vell_y);
 	Ball(const Ball &ball);
 	virtual ~Ball() {}
 
@@ -19,11 +25,19 @@ public:
 	void set_x(int x) { vell_x = x; }
 	void set_y(int y) { vell_y = y; }
 
-	const int SQUARE_H_W = 25;
-	const int REN_X = 100;
-	const int REN_Y = 100;
-	const int REN_W = 640;
-	const int REN_H = 400;
+	Ball& operator += (const int& scale) {
+		if (vell_x < 0 ? vell_x -= scale : vell_x +=scale);
+		if (vell_y < 0 ? vell_y -= scale : vell_y += scale);
+		return *this;
+	}
+	Ball& operator -= (const int& scale) {
+		if (vell_x < 0 ? vell_x += scale : vell_x -= scale);
+		if (vell_y < 0 ? vell_y += scale : vell_y -= scale);
+		return *this;
+	}
+	/*Ball operator * (const int scale) {
+		return Ball(100, 100, SQUARE_H_W, SQUARE_H_W, vell_x * scale, vell_y * scale);
+	}*/
 };
 
 class Additional_ball : public Ball

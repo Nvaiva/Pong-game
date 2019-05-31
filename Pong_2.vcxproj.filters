@@ -47,5 +47,11 @@
     <ClInclude Include="wall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="renderer_error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="object_pos.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

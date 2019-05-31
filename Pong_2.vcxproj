@@ -153,6 +153,8 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="loadImage.h" />
     <ClInclude Include="objects.h" />
+    <ClInclude Include="object_pos.h" />
+    <ClInclude Include="renderer_error.h" />
     <ClInclude Include="wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
