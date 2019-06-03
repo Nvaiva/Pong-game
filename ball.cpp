@@ -47,6 +47,14 @@ void Ball::events() {
 	object_pos.x += vell_x;
 	object_pos.y += vell_y;
 }
+void Ball::default_coordinates() {
+	x = object_pos.x;
+	y = object_pos.y;
+	w = object_pos.w;
+	h = object_pos.h;
+	vell_x_d = vell_x;
+	vell_y_d = vell_y;
+}
 void Additional_ball::events() {
 	if (object_pos.x <= 0)
 		vell_x = -vell_x;
@@ -68,8 +76,6 @@ void Additional_ball::events() {
 		object_pos.x += vell_x;
 		object_pos.y -= vell_y;
 	}
-
-	
 }
 
 

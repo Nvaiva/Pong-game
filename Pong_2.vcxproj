@@ -70,12 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\SDL\SDL2_image\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\SDL\SDL2_image\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\SDL\SDL2_image\include;C:\Users\Vaiva\Desktop\Pong_2\SDL2_image\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Vaiva\Desktop\Pong_2\SDL2_image\lib\x86;C:\SDL\SDL2_image\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\SDL\SDL2_image\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\SDL\SDL2_image\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\SDL\SDL2_image\include;C:\Users\Vaiva\Desktop\Pong_2\SDL2_image\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Vaiva\Desktop\Pong_2\SDL2_image\lib\x86;C:\SDL\SDL2_image\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -87,7 +87,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\SDL\SDL2_image\lib\x86;C:\SDL\SDL2\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -119,7 +119,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>C:\SDL\SDL2_image\lib\x86;C:\SDL\SDL2\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>

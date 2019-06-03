@@ -2,11 +2,16 @@
 #include <vector>
 #include <iostream>
 clock_t Game::time = clock();
+size_t Game::block1_points = 0;
+size_t Game::block2_points = 0;
+size_t Game::block1_points_new = 0;
+size_t Game::block2_points_new = 0;
 Game::Game()
 {
 	//time = clock();
 	nr_time = 1;
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
+		TTF_Init();
 		std::cout << "Window was initialized " << std::endl;
 		win = SDL_CreateWindow("Awesome pong game!", REN_X, REN_Y, REN_W, REN_H, SDL_WINDOW_SHOWN);
 			if(win == 0){
@@ -21,17 +26,29 @@ Game::Game()
 		}
 		is_running = true;
 		start_again = false;
+		middle_line_pos.x = (REN_W - REN_X+80)/2;
+		middle_line_pos.y = 0;
+		middle_line_pos.w = 2;
+		middle_line_pos.h = REN_H;
+		font = TTF_OpenFont("Arial.ttf", 20);
+		color = { 255, 255, 255 }; //font color
+		points1_pos = { 250,30,40,40 };
+		points2_pos = { 330,30,40,40 };
+		game_over_pos = {140,160,400,30};
 	}
 	else {
 		throw error("SDL_Init error ");
 	}
 	//initialize objects
-	block1 = new Wall_1(0, 0, BLOCK_H, BLOCK_W);
+	block1 = new Wall_1(5, 5, BLOCK_H, BLOCK_W);
+	block1->default_coordinates();
 	object.push_back(block1);
-	block2 = new Wall_2(610, 0, BLOCK_H, BLOCK_W);
+	block2 = new Wall_2(615, 5, BLOCK_H, BLOCK_W);
+	block2->default_coordinates();
 	object.push_back(block2);
 
 	square = new Ball(100, 100, SQUARE_H_W, SQUARE_H_W);
+	square->default_coordinates();
 	object.push_back(square);
 
 	//upload images to these objects
@@ -45,11 +62,10 @@ Game::Game()
 	if (object[2]->tex == nullptr) {
 		throw error("Ball texture was not loaded ");
 	}
-	game_over = Image_texture::load_texture("game_over.png", renderer);
-	if (game_over == nullptr) {
-		throw error("Game over texture was not loaded ");
+	middle_line = Image_texture::load_texture("middle.png", renderer);
+	if (middle_line == nullptr) {
+		throw error("Middle lines texture was not loaded");
 	}
-
 	//if load game was pressed
 	bool a;
 	if (!(a = start(&player_2)))
@@ -84,11 +100,11 @@ bool Game::start(bool *player_2)
 				if (event.motion.x >= 210 && event.motion.x <= 391 && event.motion.y >= 199 && event.motion.y <= 238)
 					return true;
 				if (event.motion.x >= 186 && event.motion.x <= 446 && event.motion.y >= 260 && event.motion.y <= 306)
-					return false;
-				break;
+return false;
+break;
 			}
 		}
-	SDL_DestroyTexture(intro);
+		SDL_DestroyTexture(intro);
 	}
 	return true;
 }
@@ -127,15 +143,22 @@ void Game::events()
 		object[2]->events();
 	}
 	int vell_x;
-	if (collision1(square)) {
+	if (collision1(square)||collision2(square)) {
 		vell_x = square->get_x();
 		square->set_x(-vell_x);
 	}
-	if (square->object_pos.x < 5 || square->object_pos.x > REN_W-5) {
-		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, game_over, NULL, NULL);
-		SDL_RenderPresent(renderer);
+	if (square->object_pos.x < 5 || square->object_pos.x > REN_W - 5) {
+		if (square->object_pos.x < 5) {
+			block2_points_new += 1;
+		}
+		else {
+			block1_points_new +=1 ;
+		}
+		game_over = Image_texture::load_ttf("Game over. Press enter to play again", font, color, renderer);
+		SDL_RenderCopy(renderer, game_over, NULL, &game_over_pos);
 
+		SDL_RenderPresent(renderer);
+		
 		bool t = true;
 		while (t) {
 			while (SDL_PollEvent(&event) > 0)
@@ -163,23 +186,29 @@ void Game::events()
 }
 bool Game::collision1(Ball *square) const
 {
-	if ((((square->object_pos.y >= block1->object_pos.y) && (square->object_pos.x > block1->object_pos.x))
+	if (((square->object_pos.y >= block1->object_pos.y) && (square->object_pos.x > block1->object_pos.x))
 		&& (square->object_pos.x < (block1->object_pos.x + BLOCK_H))
-			&& (square->object_pos.y < (block1->object_pos.y + BLOCK_W))) ||
-				((square->object_pos.y + SQUARE_H_W >= block2->object_pos.y) 
-					&& (square->object_pos.x < block2->object_pos.x)
-						&& (square->object_pos.x + SQUARE_H_W >= (block2->object_pos.x))
-							&& (square->object_pos.y <= (block2->object_pos.y + BLOCK_W))))
-	
-	{
+		&& (square->object_pos.y < (block1->object_pos.y + BLOCK_W))){
+
 		return true;
 	}
 	else {
 		return false;
 	}
-	
-}
 
+}
+bool Game::collision2(Ball *square) const
+{
+	if (((square->object_pos.y + SQUARE_H_W >= block2->object_pos.y)
+		&& (square->object_pos.x < block2->object_pos.x)
+			&& (square->object_pos.x + SQUARE_H_W >= (block2->object_pos.x))
+				&& (square->object_pos.y <= (block2->object_pos.y + BLOCK_W)))){
+					return true;
+				}
+				else {
+					return false;
+				}
+}
 void Game::update()
 {
 	SDL_RenderClear(renderer);
@@ -189,6 +218,24 @@ void Game::update()
 		(*it)->pos.w = (*it)->object_pos.w;
 		(*it)->pos.h = (*it)->object_pos.h;
 	}
+	if (block1_points_new == 0 && block2_points_new == 0) {
+		points1 = Image_texture::load_ttf("0", font, color, renderer);
+		points2 = Image_texture::load_ttf("0", font, color, renderer);
+	}
+	
+	if (block1_points < block1_points_new || block2_points < block2_points_new) {
+		block1_points = block1_points_new;
+		block2_points = block2_points_new;
+		a = std::to_string(block1_points);
+		b = std::to_string(block2_points);
+		points1 = Image_texture::load_ttf(a.c_str(), font, color, renderer);
+		points2 = Image_texture::load_ttf(b.c_str(), font, color, renderer);
+	}
+	SDL_RenderCopy(renderer, points2, NULL, &points2_pos);
+	SDL_RenderCopy(renderer, points1, NULL, &points1_pos);
+	SDL_RenderCopy(renderer, middle_line, NULL, &middle_line_pos);
+	SDL_RenderCopy(renderer,middle_line, NULL,&middle_line_pos);
+
 	for (it = object.begin(); it != object.end(); ++it)
 		SDL_RenderCopy(renderer, (*it)->tex, NULL, &(*it)->pos);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
@@ -217,8 +264,8 @@ Game::~Game()
 	for (it = object.begin(); it != object.end(); ++it) {
 		delete (*it);
 	}
-		
-
+	TTF_CloseFont(font);
+	TTF_Quit();
 	SDL_Quit();
 }
 void Game::save()
@@ -258,4 +305,13 @@ void Game::load()
 	square->set_y(y);
 	ofile.read((char*)&player_2, sizeof(bool));
 	ofile.close();
+}
+void Game::game_start_again() {
+	square->object_pos.x = square->x;
+	square->object_pos.y = square->y;
+	square->object_pos.w = square->w;
+	square->object_pos.h = square->h;
+	square->set_x(square->vell_x_d);
+	square->set_y(square->vell_y_d);
+
 }

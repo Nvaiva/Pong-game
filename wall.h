@@ -25,6 +25,7 @@ class Wall_1 : public Walls {
 public:
 	Wall_1() {}
 	Wall_1 (int x, int y, int width, int height):Walls(x, y, width, height) {} 
+	void default_coordinates();
 	~Wall_1 () {}
 	void events();
 };
@@ -33,9 +34,9 @@ class Wall_2 : public Walls {
 public:
 	Wall_2() {}
 	Wall_2(int x, int y, int width, int height):Walls(x, y, width, height) {}
-	
 	~Wall_2() {}
 	void events();
+	void default_coordinates();
 	void AI_wall(int y);
 };
 class AI_wall : public Walls {

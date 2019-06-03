@@ -24,6 +24,7 @@ public:
 	int get_y() const { return vell_y; }
 	void set_x(int x) { vell_x = x; }
 	void set_y(int y) { vell_y = y; }
+	void default_coordinates();
 
 	Ball& operator += (const int& scale) {
 		if (vell_x < 0 ? vell_x -= scale : vell_x +=scale);
