@@ -2,10 +2,6 @@
 #include <vector>
 #include <iostream>
 clock_t Game::time = clock();
-size_t Game::block1_points = 0;
-size_t Game::block2_points = 0;
-size_t Game::block1_points_new = 0;
-size_t Game::block2_points_new = 0;
 Game::Game()
 {
 	//time = clock();
@@ -26,26 +22,27 @@ Game::Game()
 		}
 		is_running = true;
 		start_again = false;
-		middle_line_pos.x = (REN_W - REN_X+80)/2;
-		middle_line_pos.y = 0;
-		middle_line_pos.w = 2;
-		middle_line_pos.h = REN_H;
-		font = TTF_OpenFont("Arial.ttf", 20);
+		middle_line_pos = { (REN_W - REN_X + 80) / 2, 0,2,REN_H };
+		font = TTF_OpenFont("Arial.ttf", 20); //Arial font 
 		color = { 255, 255, 255 }; //font color
-		points1_pos = { 250,30,40,40 };
-		points2_pos = { 330,30,40,40 };
-		game_over_pos = {140,160,400,30};
+		points1_pos = { 250,30,40,40 }; //position of block1 points
+		points2_pos = { 330,30,40,40 }; //position of block2 points
+		game_over_pos = {140,160,400,30}; //game over text position
+		points = { 0,0 };
 	}
 	else {
 		throw error("SDL_Init error ");
 	}
 	//initialize objects
-	block1 = new Wall_1(5, 5, BLOCK_H, BLOCK_W);
+	block1 = new Wall_1(5, 5, BLOCK_W, BLOCK_H);
 	block1->default_coordinates();
 	object.push_back(block1);
-	block2 = new Wall_2(615, 5, BLOCK_H, BLOCK_W);
+	blocks.push_back(block1);
+
+	block2 = new Wall_2(615, 5, BLOCK_W, BLOCK_H);
 	block2->default_coordinates();
 	object.push_back(block2);
+	blocks.push_back(block2);
 
 	square = new Ball(100, 100, SQUARE_H_W, SQUARE_H_W);
 	square->default_coordinates();
@@ -100,8 +97,8 @@ bool Game::start(bool *player_2)
 				if (event.motion.x >= 210 && event.motion.x <= 391 && event.motion.y >= 199 && event.motion.y <= 238)
 					return true;
 				if (event.motion.x >= 186 && event.motion.x <= 446 && event.motion.y >= 260 && event.motion.y <= 306)
-return false;
-break;
+					return false;
+					break;
 			}
 		}
 		SDL_DestroyTexture(intro);
@@ -113,6 +110,29 @@ void Game::events()
 	time = clock();
 	if (time / CLOCKS_PER_SEC > nr_time * 10) {
 		nr_time += 1;
+		if (nr_time >= 2) {
+			object.erase(std::remove_if(object.begin(), object.end(), [&](const Object* x) { return x == ad_block; }), object.end());
+			blocks.erase(std::remove_if(blocks.begin(), blocks.end(), [&](const Object* x) {return x == ad_block; }), blocks.end());
+		}
+		ad_block = new Additional_wall(0, 0, 0, 0);
+		blocks.push_back(ad_block);
+		object.push_back(ad_block);
+		ad_block->load_image("Block.png", renderer);
+		if (ad_block->tex == nullptr)
+			throw error("Block image for additioal block was not created ");
+		if (square->object_pos.x < middle_line_pos.x) {
+			ad_block->object_pos.x = rand() % ((REN_W - REN_X - 80) - (middle_line_pos.x + 50) + 1) + (middle_line_pos.x + 50);
+			ad_block->object_pos.y = rand() % REN_H + 1;
+			ad_block->object_pos.w = 15;
+			ad_block->object_pos.h = 50;
+		}
+		else
+		{
+		ad_block->object_pos.x = rand() % ((middle_line_pos.x - 50) - 80 + 1) + 80;
+		ad_block->object_pos.y = rand() % REN_H + 0;
+		ad_block->object_pos.w = 15;
+		ad_block->object_pos.h = 50;
+		}
 	}
 	while (SDL_PollEvent(&event) != 0) {
 		if (event.type == SDL_QUIT) {
@@ -142,23 +162,26 @@ void Game::events()
 		block2->AI_wall(y);
 		object[2]->events();
 	}
+
 	int vell_x;
-	if (collision1(square)||collision2(square)) {
-		vell_x = square->get_x();
-		square->set_x(-vell_x);
+	for (blo = blocks.begin(); blo != blocks.end(); ++blo) {
+		if (collision1(square, (*blo))) {
+			vell_x = square->get_x();
+			square->set_x(-vell_x);
+		}
 	}
 	if (square->object_pos.x < 5 || square->object_pos.x > REN_W - 5) {
 		if (square->object_pos.x < 5) {
 			block2_points_new += 1;
 		}
 		else {
-			block1_points_new +=1 ;
+			block1_points_new += 1;
 		}
 		game_over = Image_texture::load_ttf("Game over. Press enter to play again", font, color, renderer);
 		SDL_RenderCopy(renderer, game_over, NULL, &game_over_pos);
 
 		SDL_RenderPresent(renderer);
-		
+
 		bool t = true;
 		while (t) {
 			while (SDL_PollEvent(&event) > 0)
@@ -184,30 +207,29 @@ void Game::events()
 		}
 	}
 }
-bool Game::collision1(Ball *square) const
+bool Game::collision1(Ball *square, Object* wall) const
 {
-	if (((square->object_pos.y >= block1->object_pos.y) && (square->object_pos.x > block1->object_pos.x))
-		&& (square->object_pos.x < (block1->object_pos.x + BLOCK_H))
-		&& (square->object_pos.y < (block1->object_pos.y + BLOCK_W))){
-
+	//collision with walls right side
+	if (((square->object_pos.x > wall->object_pos.x) && (square->object_pos.x <= wall->object_pos.x + BLOCK_W))
+		&& ((square->object_pos.y + SQUARE_H_W >= wall->object_pos.y) && (square->object_pos.y <= wall->object_pos.y + BLOCK_H))) {
 		return true;
 	}
-	else {
-		return false;
+	//collision with walls left side
+	if ((square->object_pos.x + SQUARE_H_W <= wall->object_pos.x + BLOCK_W) && (square->object_pos.x + SQUARE_H_W >= wall->object_pos.x)
+		&& (square->object_pos.y + SQUARE_H_W <= wall->object_pos.y + BLOCK_H) && (square->object_pos.y + SQUARE_H_W >= wall->object_pos.y)) {
+		return true;
 	}
-
-}
-bool Game::collision2(Ball *square) const
-{
-	if (((square->object_pos.y + SQUARE_H_W >= block2->object_pos.y)
-		&& (square->object_pos.x < block2->object_pos.x)
-			&& (square->object_pos.x + SQUARE_H_W >= (block2->object_pos.x))
-				&& (square->object_pos.y <= (block2->object_pos.y + BLOCK_W)))){
-					return true;
-				}
-				else {
-					return false;
-				}
+	//collision with walls upper side
+	if ((square->object_pos.x <= wall->object_pos.x + BLOCK_W) && (square->object_pos.x + SQUARE_H_W >= wall->object_pos.x)
+		&& (square->object_pos.y == wall->object_pos.y)) {
+		return true;
+	}
+	//colllsion with walls bottom side
+	if (((square->object_pos.x <= wall->object_pos.x) && (square->object_pos.x >= wall->object_pos.x + BLOCK_H))
+		&& (square->object_pos.y == wall->object_pos.y + BLOCK_H)){
+		return true;
+	}
+	return false;
 }
 void Game::update()
 {
@@ -223,11 +245,11 @@ void Game::update()
 		points2 = Image_texture::load_ttf("0", font, color, renderer);
 	}
 	
-	if (block1_points < block1_points_new || block2_points < block2_points_new) {
-		block1_points = block1_points_new;
-		block2_points = block2_points_new;
-		a = std::to_string(block1_points);
-		b = std::to_string(block2_points);
+	if (std::any_of(points.begin(), points.end(), [&](size_t a) {return (a == block1_points_new || a == block2_points_new);})) {
+		points[0] = block1_points_new;
+		points[1] = block2_points_new;
+		a = std::to_string(points[0]);
+		b = std::to_string(points[1]);
 		points1 = Image_texture::load_ttf(a.c_str(), font, color, renderer);
 		points2 = Image_texture::load_ttf(b.c_str(), font, color, renderer);
 	}
@@ -236,8 +258,7 @@ void Game::update()
 	SDL_RenderCopy(renderer, middle_line, NULL, &middle_line_pos);
 	SDL_RenderCopy(renderer,middle_line, NULL,&middle_line_pos);
 
-	for (it = object.begin(); it != object.end(); ++it)
-		SDL_RenderCopy(renderer, (*it)->tex, NULL, &(*it)->pos);
+	std::for_each(object.begin(), object.end(), [&](Object* a) {a->render(renderer,a->pos); });
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderPresent(renderer);
 
@@ -284,6 +305,8 @@ void Game::save()
 	ofile.write((char*)&x, sizeof(int));
 	ofile.write((char*)&y, sizeof(int));
 	ofile.write((char*)&player_2, sizeof(bool));
+	ofile.write((char*)&block1_points_new, sizeof(size_t));
+	ofile.write((char*)&block2_points_new, sizeof(size_t));
 	ofile.close();
 }
 void Game::load() 
@@ -304,9 +327,14 @@ void Game::load()
 	square->set_x(x);
 	square->set_y(y);
 	ofile.read((char*)&player_2, sizeof(bool));
+	ofile.read((char*)&block1_points_new, sizeof(size_t));
+	ofile.read((char*)&block2_points_new, sizeof(size_t));
 	ofile.close();
 }
 void Game::game_start_again() {
+	blo = std::remove(blocks.begin(), blocks.end(), ad_block);
+	it = std::remove(object.begin(), object.end(), ad_block);
+	time = 0;
 	square->object_pos.x = square->x;
 	square->object_pos.y = square->y;
 	square->object_pos.w = square->w;

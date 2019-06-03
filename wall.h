@@ -26,6 +26,7 @@ public:
 	Wall_1() {}
 	Wall_1 (int x, int y, int width, int height):Walls(x, y, width, height) {} 
 	void default_coordinates();
+	void render(SDL_Renderer* ren, SDL_Rect wall);
 	~Wall_1 () {}
 	void events();
 };
@@ -37,13 +38,16 @@ public:
 	~Wall_2() {}
 	void events();
 	void default_coordinates();
+	void render(SDL_Renderer* ren, SDL_Rect wall);
 	void AI_wall(int y);
 };
-class AI_wall : public Walls {
+class Additional_wall : public Walls {
 public:
-	AI_wall(){}
-	AI_wall(int x, int y, int width, int height) :Walls(x, y, width, height) {}
-	~AI_wall() {}
-	void set_x(int x) { object_pos.x = x; }
+	Additional_wall(): Walls() { }
+	Additional_wall(int x, int y, int width, int height) :Walls(x, y, width, height) {}
+	~Additional_wall() {}
+	void events() { }
+	void default_coordinates() {}
+	void render(SDL_Renderer* ren, SDL_Rect wall);
 };
 

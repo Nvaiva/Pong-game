@@ -31,11 +31,7 @@ public:
 		if (vell_y < 0 ? vell_y -= scale : vell_y += scale);
 		return *this;
 	}
-	Ball& operator -= (const int& scale) {
-		if (vell_x < 0 ? vell_x += scale : vell_x -= scale);
-		if (vell_y < 0 ? vell_y += scale : vell_y -= scale);
-		return *this;
-	}
+	friend Ball& operator -= (Ball& ball, const int& scale);
 	/*Ball operator * (const int scale) {
 		return Ball(100, 100, SQUARE_H_W, SQUARE_H_W, vell_x * scale, vell_y * scale);
 	}*/

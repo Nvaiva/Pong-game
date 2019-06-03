@@ -16,8 +16,9 @@
 #include "renderer_error.h"
 #include <time.h>
 #include <algorithm>
-#include <array>
+#include <list>
 #include "SDL_ttf.h"
+#include <array>
 class Game
 {
 public:
@@ -30,8 +31,8 @@ public:
 	void set_running() { is_running = true; }
 	bool again() const { return start_again;  }
 	void set_again() { start_again = false; }
-	bool collision1(Ball *square) const;
-	bool collision2(Ball *square) const;
+	bool collision1(Ball *square, Object *wall) const;
+	bool is_add_block(const Object* a) const { if (a == ad_block) true; }
 	void game_start_again();
 	Game();
 	~Game();
@@ -58,16 +59,19 @@ private:
 	Wall_1 *block1;
 	Wall_2 *block2;
 	Ball *square;
-	std::array<Object*, 2> blocks{ { block1,block2 } };
-	std::array<Object*, 2>::iterator blo; //blocks array iterator
+	Additional_wall *ad_block;
+
+	std::list<Object*> blocks;
+	std::list<Object*>::iterator blo; //blocks array iterator
 	static clock_t time;
 	int nr_time;
 
 	//points rendering
-	static size_t block1_points;
-	static size_t block2_points;
-	static size_t block1_points_new;
-	static size_t block2_points_new;
+	//size_t block1_points;
+	//size_t block2_points;
+	std::array<size_t, 2> points;
+	size_t block1_points_new;
+	size_t block2_points_new;
 	TTF_Font * font;
 	SDL_Color color;
 	SDL_Texture* points1;

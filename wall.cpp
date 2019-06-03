@@ -20,7 +20,15 @@ void Walls::load_image(const char* photoName, SDL_Renderer* ren) {
 void Walls::render(SDL_Renderer* ren, SDL_Rect wall) {
 	SDL_RenderCopy(ren, tex, NULL, &wall);
 }
-
+void Wall_1::render(SDL_Renderer* ren, SDL_Rect wall) {
+	SDL_RenderCopy(ren, tex, NULL, &wall);
+}
+void Wall_2::render(SDL_Renderer* ren, SDL_Rect wall) {
+	SDL_RenderCopy(ren, tex, NULL, &wall);
+}
+void Additional_wall::render(SDL_Renderer* ren, SDL_Rect wall) {
+	SDL_RenderCopy(ren, tex, NULL, &wall);
+}
 void Wall_1::events() {
 	while (SDL_PollEvent(&event) != 0) {
 		if (event.type == SDL_QUIT) {

@@ -3,8 +3,8 @@
 #include "loadImage.h"
 #include "object_pos.h"
 const int BLOCKS = 2;
-const int BLOCK_W = 80;
-const int BLOCK_H = 15;
+const int BLOCK_H = 80;
+const int BLOCK_W = 15;
 const int SQUARE_H_W = 20;
 const int BLOCK_QUANTITY = 2;
 //renderer size

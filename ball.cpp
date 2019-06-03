@@ -22,6 +22,11 @@ Ball::Ball(const Ball &ball) {
 	object_pos.h = ball.object_pos.h;
 	object_pos.w = ball.object_pos.w;
 }
+Ball& operator -= (Ball& ball, const int& scale){
+	if (ball.vell_x < 0 ? ball.vell_x += scale : ball. vell_x -= scale);
+	if (ball.vell_y < 0 ? ball.vell_y += scale : ball.vell_y -= scale);
+	return ball;
+}
 void Ball::load_image(const char* photoName, SDL_Renderer* ren) {
 	image.load(photoName, ren);
 	tex = image.texture;
